@@ -15,10 +15,10 @@ RUN apt-get update && apt-get install -y \
     icc-profiles-free \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --default-timeout=1000 --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY backend/ .
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

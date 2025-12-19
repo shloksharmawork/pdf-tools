@@ -5,7 +5,7 @@ services:
     runtime: docker
     region: singapore
     plan: free
-    dockerContext: ./backend
+    dockerContext: .
     dockerfilePath: ./backend/Dockerfile
     envVars:
       - key: APP_ENV
@@ -26,7 +26,7 @@ services:
     runtime: docker
     region: singapore
     plan: free
-    dockerContext: ./frontend
+    dockerContext: .
     dockerfilePath: ./frontend/Dockerfile
     envVars:
       - key: BACKEND_URL
