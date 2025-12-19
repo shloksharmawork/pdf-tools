@@ -33,4 +33,4 @@ services:
         fromService:
           type: web
           name: pdf-tools-backend
-          property: url
+          property: host
