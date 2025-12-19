@@ -1,0 +1,36 @@
+services:
+  # Backend Service
+  - type: web
+    name: pdf-tools-backend
+    runtime: docker
+    region: singapore # Optional: defaults to oregon
+    plan: free # Use free tier
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: MAX_FILE_SIZE_MB
+        value: 25
+      - key: UPLOAD_DIR
+        value: /tmp/uploads
+      - key: RATE_LIMIT_PER_MIN
+        value: 30
+      - key: CORS_ORIGINS
+        value: "*" # Allow all origins for simplicity (or frontend URL will cover it)
+    healthCheckPath: /health
+
+  # Frontend Service
+  - type: web
+    name: pdf-tools-frontend
+    runtime: docker
+    region: singapore
+    plan: free
+    dockerContext: frontend
+    dockerfilePath: frontend/Dockerfile
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: pdf-tools-backend
+          property: url
