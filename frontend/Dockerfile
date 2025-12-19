@@ -23,10 +23,7 @@ COPY --from=builder /app/package.json .
 COPY --from=builder /app/next.config.js .
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-
-# Copy public directory if it exists
-RUN mkdir -p public
-COPY --from=builder /app/public ./public || true
+COPY --from=builder /app/public ./public
 
 EXPOSE 3000
 
