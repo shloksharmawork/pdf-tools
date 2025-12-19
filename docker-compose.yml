@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: pdf_tools_backend
+    expose:
+      - "8000" # Expose but do NOT map ports (Nginx handles entry)
+    volumes:
+      - ./backend/app:/app/app
+      - /tmp/pdf-tools:/tmp/uploads # Shared if needed, but here just mounting host tmp
+    environment:
+      - APP_ENV=production
+      - MAX_FILE_SIZE_MB=25
+      - UPLOAD_DIR=/tmp/uploads
+      - RATE_LIMIT_PER_MIN=30
+      - CORS_ORIGINS=http://localhost,https://yourdomain.com
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: pdf_tools_frontend
+    expose:
+      - "3000" # Expose but do NOT map ports
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=/api # Use relative path for Nginx routing
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    container_name: pdf_tools_nginx
+    ports:
+      - "80:80"
+      # - "443:443" # Uncomment for SSL
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - frontend
+      - backend
+    restart: always

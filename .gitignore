@@ -1,0 +1,35 @@
+# System
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.pytest_cache/
+backend/app/log.txt
+backend/app/valid_log.txt
+*.log
+
+# Node / Frontend
+node_modules/
+.next/
+out/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated Files
+*_output.pdf
+*_cropped.pdf
+*_rotated.pdf
+*_numbered.pdf
+*_watermarked.pdf
+*_redact.pdf
+comparison_*.pdf
+debug_logs.txt
