@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api'
+// Use full backend URL in production, relative path in development
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+    ? `https://${process.env.NEXT_PUBLIC_BACKEND_URL}/api`
+    : '/api'
 
 const api = axios.create({
     baseURL: API_URL,
