@@ -5,6 +5,7 @@ services:
     runtime: docker
     region: singapore
     plan: free
+    autoDeploy: true
     dockerContext: .
     dockerfilePath: ./backend/Dockerfile
     envVars:
@@ -26,6 +27,7 @@ services:
     runtime: docker
     region: singapore
     plan: free
+    autoDeploy: true
     dockerContext: .
     dockerfilePath: ./frontend/Dockerfile
     envVars:
