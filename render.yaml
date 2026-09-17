@@ -34,5 +34,10 @@ services:
           type: web
           name: pdf-tools-backend
           property: host
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: pdf-tools-backend
+          property: host
       - key: PORT
         value: 3000

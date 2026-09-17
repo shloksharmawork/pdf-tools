@@ -16,8 +16,17 @@ export default function RootLayout({
 }: {
     children: React.ReactNode
 }) {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || ''
+
     return (
         <html lang="en">
+            <head>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `window.__ENV__ = { BACKEND_URL: ${JSON.stringify(backendUrl)} };`,
+                    }}
+                />
+            </head>
             <body className={inter.className}>
                 <div className="flex flex-col min-h-screen">
                     <Header />
