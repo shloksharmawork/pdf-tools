@@ -3,31 +3,33 @@ import axios from 'axios'
 let cachedBackendUrl: string | null = null
 let configPromise: Promise<string> | null = null
 
+function normalizeUrl(raw: string): string {
+    let url = raw.trim().replace(/^https?:\/\//, '').replace(/\/+$/, '')
+    if (!url) return ''
+    if (!url.includes('.') && !url.includes('localhost')) {
+        url = `${url}.onrender.com`
+    }
+    return url.startsWith('localhost') ? `http://${url}` : `https://${url}`
+}
+
 async function resolveBackendUrl(): Promise<string> {
     if (cachedBackendUrl) return cachedBackendUrl
 
     // 1. Check window.__ENV__ (injected by root layout at SSR)
     if (typeof window !== 'undefined' && (window as any).__ENV__?.BACKEND_URL) {
-        let url = ((window as any).__ENV__.BACKEND_URL as string).trim()
-        if (url) {
-            url = url.replace(/\/+$/, '')
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = `https://${url}`
-            }
-            cachedBackendUrl = url
+        const raw = (window as any).__ENV__.BACKEND_URL as string
+        const formatted = normalizeUrl(raw)
+        if (formatted) {
+            cachedBackendUrl = formatted
             return cachedBackendUrl
         }
     }
 
     // 2. Check build-time environment variable
     if (process.env.NEXT_PUBLIC_BACKEND_URL) {
-        let url = process.env.NEXT_PUBLIC_BACKEND_URL.trim()
-        if (url) {
-            url = url.replace(/\/+$/, '')
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = `https://${url}`
-            }
-            cachedBackendUrl = url
+        const formatted = normalizeUrl(process.env.NEXT_PUBLIC_BACKEND_URL)
+        if (formatted) {
+            cachedBackendUrl = formatted
             return cachedBackendUrl
         }
     }
@@ -38,13 +40,10 @@ async function resolveBackendUrl(): Promise<string> {
             configPromise = fetch('/api/config')
                 .then((res) => (res.ok ? res.json() : {}))
                 .then((data) => {
-                    let url = (data?.backendUrl || '').trim()
-                    if (url) {
-                        url = url.replace(/\/+$/, '')
-                        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                            url = `https://${url}`
-                        }
-                        cachedBackendUrl = url
+                    const raw = data?.backendUrl || ''
+                    const formatted = normalizeUrl(raw)
+                    if (formatted) {
+                        cachedBackendUrl = formatted
                         return cachedBackendUrl
                     }
                     return ''
